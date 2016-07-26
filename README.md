@@ -1,2 +1,10 @@
 # roe-sizer
-Resize batches of images, handy for LuLaRoe consultants who need to process a lot of high-res images in bulk
+Handy image batch resizer, designed with LuLaRoe consultants in mind.
+
+## Usage
+
+### LuLaRoe Consultants
+Instructions TBD
+
+### Developers (Linux / MacOS)
+`cd roe-sizer && npm start`
