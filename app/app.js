@@ -5,10 +5,8 @@
 import os from 'os'; // native node.js module
 import { remote } from 'electron'; // native electron module
 import jetpack from 'fs-jetpack'; // module loaded from npm
-// import { greet } from './hello_world/hello_world'; // code authored by you in this project
+import { ids } from './htmlElements/elementIds';
 import env from './env';
-
-console.log('Loaded environment variables:', env);
 
 var app = remote.app;
 var appDir = jetpack.cwd(app.getAppPath());
@@ -24,16 +22,6 @@ var environment = env.name.toUpperCase();
 var debugString = pkgName + ' ' + pkgVersion + ' by ' + pkgAuthor + ' @ ' + platform + ' ' + environment;
 var DEBUG_MODE  = environment == 'DEVELOPMENT';
 if (DEBUG_MODE) { console.log(debugString); }
-
-//  HTML Element Ids
-var inputId         = 'input';
-var inputButtonId   = 'inputButton';
-var outputId        = 'output';
-var outputButtonId  = 'outputButton';
-var widthId         = 'width';
-var processButtonId = 'button';
-var progressBarId   = 'progress';
-var statusId        = 'status';
 
 //  Sets the HTML element with the specified ID to the specified visible value
 function _setVisible (id, visible, callback) {
@@ -65,7 +53,7 @@ function _setContent (id, content, callback) {
 
 //  Updates the status message to the specified message content.
 function updateStatus (msg) {
-  _setContent(statusId, msg);
+  _setContent(ids['statusId'], msg);
 }
 
 //  Logic that occurs when the input button is pressed.
@@ -87,15 +75,15 @@ function onProcessImagesButtonPressed() {
 function _initButtons() {
   var buttons = [
     {
-      "id": inputButtonId,
+      "id": ids['inputButtonId'],
       "function": onInputButtonPressed
     },
     {
-      "id": outputButtonId,
+      "id": ids['outputButtonId'],
       "function": onOutputButtonPressed
     },
     {
-      "id": processButtonId,
+      "id": ids['processButtonId'],
       "function": onProcessImagesButtonPressed
     }
   ];
@@ -110,7 +98,7 @@ function _initButtons() {
 //  Initialization logic
 function _initialize() {
   updateStatus(DEBUG_MODE ? debugString : 'Welcome to ' + productName + ' ' + pkgVersion + ' by ' + pkgAuthor);
-  _setVisible(progressBarId);
+  _setVisible(ids['progressBarId']);
   _initButtons();
 }
 

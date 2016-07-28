@@ -6,10 +6,19 @@ var os = _interopDefault(require('os'));
 var electron = require('electron');
 var jetpack = _interopDefault(require('fs-jetpack'));
 
+var ids = {
+  'inputId':          'input',
+  'inputButtonId':    'inputButton',
+  'outputId':         'output',
+  'outputButtonId':   'outputButton',
+  'widthId':          'width',
+  'processButtonId':  'button',
+  'progressBarId':    'progress',
+  'statusId':         'status'
+};
+
 // The variables have been written to `env.json` by the build process.
 var env = jetpack.cwd(__dirname).read('env.json', 'json');
-
-console.log('Loaded environment variables:', env);
 
 var app = electron.remote.app;
 var appDir = jetpack.cwd(app.getAppPath());
@@ -25,12 +34,6 @@ var environment = env.name.toUpperCase();
 var debugString = pkgName + ' ' + pkgVersion + ' by ' + pkgAuthor + ' @ ' + platform + ' ' + environment;
 var DEBUG_MODE  = environment == 'DEVELOPMENT';
 if (DEBUG_MODE) { console.log(debugString); }
-
-var inputButtonId   = 'inputButton';
-var outputButtonId  = 'outputButton';
-var processButtonId = 'button';
-var progressBarId   = 'progress';
-var statusId        = 'status';
 
 //  Sets the HTML element with the specified ID to the specified visible value
 function _setVisible (id, visible, callback) {
@@ -62,7 +65,7 @@ function _setContent (id, content, callback) {
 
 //  Updates the status message to the specified message content.
 function updateStatus (msg) {
-  _setContent(statusId, msg);
+  _setContent(ids['statusId'], msg);
 }
 
 //  Logic that occurs when the input button is pressed.
@@ -84,15 +87,15 @@ function onProcessImagesButtonPressed() {
 function _initButtons() {
   var buttons = [
     {
-      "id": inputButtonId,
+      "id": ids['inputButtonId'],
       "function": onInputButtonPressed
     },
     {
-      "id": outputButtonId,
+      "id": ids['outputButtonId'],
       "function": onOutputButtonPressed
     },
     {
-      "id": processButtonId,
+      "id": ids['processButtonId'],
       "function": onProcessImagesButtonPressed
     }
   ];
@@ -107,7 +110,7 @@ function _initButtons() {
 //  Initialization logic
 function _initialize() {
   updateStatus(DEBUG_MODE ? debugString : 'Welcome to ' + productName + ' ' + pkgVersion + ' by ' + pkgAuthor);
-  _setVisible(progressBarId);
+  _setVisible(ids['progressBarId']);
   _initButtons();
 }
 
