@@ -26,11 +26,13 @@ var DEBUG_MODE  = environment == 'DEVELOPMENT';
 if (DEBUG_MODE) { console.log(debugString); }
 
 //  HTML Element Ids
-var inputId       = 'input';
-var outputId      = 'output';
-var widthId       = 'width';
-var progressBarId = 'progress';
-var statusId      = 'status';
+var inputId         = 'input';
+var inputButtonId   = 'inputButton';
+var outputId        = 'output';
+var outputButtonId  = 'outputButton';
+var widthId         = 'width';
+var progressBarId   = 'progress';
+var statusId        = 'status';
 
 //  Sets the HTML element with the specified ID to the specified visible value
 function _setVisible (id, visible, callback) {
