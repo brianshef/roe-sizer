@@ -7,6 +7,8 @@ import { remote } from 'electron'; // native electron module
 import jetpack from 'fs-jetpack'; // module loaded from npm
 import { ids } from './htmlElements/elementIds';
 import { initButtons } from './buttons/buttons.js';
+import { initInput } from './options/input.js';
+import { initOutput } from './options/output.js';
 import env from './env';
 
 var app = remote.app;
@@ -62,6 +64,8 @@ function _initialize() {
   updateStatus(DEBUG_MODE ? debugString : 'Welcome to ' + productName + ' ' + pkgVersion + ' by ' + pkgAuthor);
   _setVisible(ids['progressBarId']);
   initButtons();
+  initInput();
+  initOutput();
 }
 
 document.addEventListener('DOMContentLoaded', function () {

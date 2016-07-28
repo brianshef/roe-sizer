@@ -8,24 +8,12 @@ var jetpack = _interopDefault(require('fs-jetpack'));
 
 var ids = {
   'inputId':          'input',
-  'inputButtonId':    'inputButton',
   'outputId':         'output',
-  'outputButtonId':   'outputButton',
   'widthId':          'width',
   'processButtonId':  'button',
   'progressBarId':    'progress',
   'statusId':         'status'
 };
-
-//  Logic that occurs when the input button is pressed.
-function _onInputButtonPressed() {
-  alert('Input button pressed');
-}
-
-//  Logic that occurs when the output button is pressed.
-function _onOutputButtonPressed() {
-  alert('Output button pressed');
-}
 
 //  Logic that occurs when the PROCESS IMAGES button is pressed.
 function _onProcessImagesButtonPressed() {
@@ -35,14 +23,6 @@ function _onProcessImagesButtonPressed() {
 //  Initialization of buttons
 var initButtons = function () {
   var buttons = [
-    {
-      "id": ids['inputButtonId'],
-      "function": _onInputButtonPressed
-    },
-    {
-      "id": ids['outputButtonId'],
-      "function": _onOutputButtonPressed
-    },
     {
       "id": ids['processButtonId'],
       "function": _onProcessImagesButtonPressed
@@ -54,6 +34,24 @@ var initButtons = function () {
     var b = document.getElementById(button['id']);
     if (b) { b.addEventListener("click", button['function']); }
   }
+}
+
+function _onInputChange(event) {
+  console.info('Input value changed:', this.value);
+}
+
+var initInput = function() {
+  var e = document.getElementById(ids['inputId']);
+  if (e) { e.addEventListener('change', _onInputChange); }
+}
+
+function _inOutputChange(event) {
+  console.info('Output value changed:', this.value);
+}
+
+var initOutput = function() {
+  var e = document.getElementById(ids['outputId']);
+  if (e) { e.addEventListener('change', _inOutputChange); }
 }
 
 // The variables have been written to `env.json` by the build process.
@@ -112,6 +110,8 @@ function _initialize() {
   updateStatus(DEBUG_MODE ? debugString : 'Welcome to ' + productName + ' ' + pkgVersion + ' by ' + pkgAuthor);
   _setVisible(ids['progressBarId']);
   initButtons();
+  initInput();
+  initOutput();
 }
 
 document.addEventListener('DOMContentLoaded', function () {
