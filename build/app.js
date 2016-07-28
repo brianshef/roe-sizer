@@ -14,11 +14,8 @@ console.log('Loaded environment variables:', env);
 var app = electron.remote.app;
 var appDir = jetpack.cwd(app.getAppPath());
 
-console.log('The author of this app is:', appDir.read('package.json', 'json').author);
-console.info('PLATFORM:', os.platform(), 'ENVIRONMENT:', env.name);
-
 //  Debug variables
-var pkg         = appDir.read('package,json', 'json');
+var pkg         = appDir.read('package.json', 'json');
 var pkgName     = pkg.name;
 var productName = pkg.productName;
 var pkgVersion  = pkg.version;
@@ -26,7 +23,8 @@ var pkgAuthor   = pkg.author;
 var platform    = os.platform().toUpperCase();
 var environment = env.name.toUpperCase();
 var debugString = pkgName + ' ' + pkgVersion + ' by ' + pkgAuthor + ' @ ' + platform + ' ' + environment;
-var DEBUG_MODE  = platform == 'DEVELOPMENT';
+var DEBUG_MODE  = environment == 'DEVELOPMENT';
+if (DEBUG_MODE) { console.log(debugString); }
 
 var progressBarId = 'progress';
 var statusId      = 'status';
