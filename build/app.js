@@ -17,6 +17,45 @@ var ids = {
   'statusId':         'status'
 };
 
+//  Logic that occurs when the input button is pressed.
+function _onInputButtonPressed() {
+  alert('Input button pressed');
+}
+
+//  Logic that occurs when the output button is pressed.
+function _onOutputButtonPressed() {
+  alert('Output button pressed');
+}
+
+//  Logic that occurs when the PROCESS IMAGES button is pressed.
+function _onProcessImagesButtonPressed() {
+  alert('PROCESS IMAGES button pressed');
+}
+
+//  Initialization of buttons
+var initButtons = function () {
+  var buttons = [
+    {
+      "id": ids['inputButtonId'],
+      "function": _onInputButtonPressed
+    },
+    {
+      "id": ids['outputButtonId'],
+      "function": _onOutputButtonPressed
+    },
+    {
+      "id": ids['processButtonId'],
+      "function": _onProcessImagesButtonPressed
+    }
+  ];
+
+  for (var i in buttons) {
+    var button = buttons[i];
+    var b = document.getElementById(button['id']);
+    if (b) { b.addEventListener("click", button['function']); }
+  }
+}
+
 // The variables have been written to `env.json` by the build process.
 var env = jetpack.cwd(__dirname).read('env.json', 'json');
 
@@ -68,50 +107,11 @@ function updateStatus (msg) {
   _setContent(ids['statusId'], msg);
 }
 
-//  Logic that occurs when the input button is pressed.
-function onInputButtonPressed() {
-  alert('Input button pressed');
-}
-
-//  Logic that occurs when the output button is pressed.
-function onOutputButtonPressed() {
-  alert('Output button pressed');
-}
-
-//  Logic that occurs when the PROCESS IMAGES button is pressed.
-function onProcessImagesButtonPressed() {
-  alert('PROCESS IMAGES button pressed');
-}
-
-//  Initialization of buttons
-function _initButtons() {
-  var buttons = [
-    {
-      "id": ids['inputButtonId'],
-      "function": onInputButtonPressed
-    },
-    {
-      "id": ids['outputButtonId'],
-      "function": onOutputButtonPressed
-    },
-    {
-      "id": ids['processButtonId'],
-      "function": onProcessImagesButtonPressed
-    }
-  ];
-
-  for (var i in buttons) {
-    var button = buttons[i];
-    var b = document.getElementById(button['id']);
-    if (b) { b.addEventListener("click", button['function']); }
-  }
-}
-
 //  Initialization logic
 function _initialize() {
   updateStatus(DEBUG_MODE ? debugString : 'Welcome to ' + productName + ' ' + pkgVersion + ' by ' + pkgAuthor);
   _setVisible(ids['progressBarId']);
-  _initButtons();
+  initButtons();
 }
 
 document.addEventListener('DOMContentLoaded', function () {
