@@ -31,6 +31,7 @@ var inputButtonId   = 'inputButton';
 var outputId        = 'output';
 var outputButtonId  = 'outputButton';
 var widthId         = 'width';
+var processButtonId = 'button';
 var progressBarId   = 'progress';
 var statusId        = 'status';
 
@@ -67,7 +68,52 @@ function updateStatus (msg) {
   _setContent(statusId, msg);
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+//  Logic that occurs when the input button is pressed.
+function onInputButtonPressed() {
+  alert('Input button pressed');
+}
+
+//  Logic that occurs when the output button is pressed.
+function onOutputButtonPressed() {
+  alert('Output button pressed');
+}
+
+//  Logic that occurs when the PROCESS IMAGES button is pressed.
+function onProcessImagesButtonPressed() {
+  alert('PROCESS IMAGES button pressed');
+}
+
+//  Initialization of buttons
+function _initButtons() {
+  var buttons = [
+    {
+      "id": inputButtonId,
+      "function": onInputButtonPressed
+    },
+    {
+      "id": outputButtonId,
+      "function": onOutputButtonPressed
+    },
+    {
+      "id": processButtonId,
+      "function": onProcessImagesButtonPressed
+    }
+  ];
+
+  for (var i in buttons) {
+    var button = buttons[i];
+    var b = document.getElementById(button['id']);
+    if (b) { b.addEventListener("click", button['function']); }
+  }
+}
+
+//  Initialization logic
+function _initialize() {
   updateStatus(DEBUG_MODE ? debugString : 'Welcome to ' + productName + ' ' + pkgVersion + ' by ' + pkgAuthor);
   _setVisible(progressBarId);
+  _initButtons();
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  _initialize();
 });
