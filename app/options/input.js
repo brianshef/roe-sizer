@@ -1,10 +1,22 @@
 import { ids } from '../htmlElements/elementIds';
 
-function _onInputChange(event) {
-  console.info('Input value changed:', this.value);
+var _value = '';
+
+function _getElement (callback) {
+  var e = document.getElementById(ids['inputId']);
+  if (e && callback) { callback(e); }
+}
+
+function _onInputChange (event) {
+  _value = this.value;
+}
+
+export var getInputValue = function() {
+  return _value;
 }
 
 export var initInput = function() {
-  var e = document.getElementById(ids['inputId']);
-  if (e) { e.addEventListener('change', _onInputChange); }
+  _getElement(function(e) {
+    e.addEventListener('change', _onInputChange);
+  });
 }

@@ -15,9 +15,115 @@ var ids = {
   'statusId':         'status'
 };
 
+var _value = '';
+
+function _getElement (callback) {
+  var e = document.getElementById(ids['inputId']);
+  if (e && callback) { callback(e); }
+}
+
+function _onInputChange (event) {
+  _value = this.value;
+}
+
+var getInputValue = function() {
+  return _value;
+}
+
+var initInput = function() {
+  _getElement(function(e) {
+    e.addEventListener('change', _onInputChange);
+  });
+}
+
+var _value$1 = '';
+
+function _getElement$1 (callback) {
+  var e = document.getElementById(ids['outputId']);
+  if (e && callback) { callback(e); }
+}
+
+function _onOutputChange (event) {
+  _value$1 = this.value;
+}
+
+var getOutputValue = function() {
+  return _value$1;
+}
+
+var initOutput = function() {
+  _getElement$1(function(e) {
+    e.addEventListener('change', _onOutputChange);
+  });
+}
+
+var _value$2 = 0;
+
+function _getElement$2 (callback) {
+  var e = document.getElementById(ids['widthId']);
+  if (e && callback) { callback(e); }
+}
+
+function _onWidthChange (event) {
+  _value$2 = this.value;
+}
+
+var getWidthValue = function() {
+  return _value$2;
+}
+
+var initWidth = function() {
+  _getElement$2(function(e) {
+    e.addEventListener('change', _onWidthChange);
+  });
+}
+
+//  Receive messages from server (background.js)
+const { ipcRenderer } = require('electron');
+ipcRenderer.on('asynchronous-reply', _handleAsyncMessage);
+
+//  Handle messages from server (background.js)
+function _handleAsyncMessage (event, msg) {
+  console.info('[asynchronous-message]', msg);
+}
+
+//  Send messages to server (background.js)
+function _sendMsg (data) {
+  ipcRenderer.send('asynchronous-message', data);
+}
+
+//  Get the values of the various options
+function _getOptionValues (callback) {
+  if (callback) {
+    callback(getInputValue(), getOutputValue(), getWidthValue());
+  }
+}
+
+//  Formats option data into a JSON message to be read by the server
+function _formatMsg (inputDir, outputDir, width, callback) {
+  var msg = {
+    'type': 'PROCESS_IMAGES',
+    'inputDir': inputDir ? inputDir : '',
+    'outputDir': outputDir ? outputDir : '',
+    'width': width ? width : 0
+  };
+
+  if (callback) { callback(msg); }
+}
+
+//  Gets the option values, formats them in a message, and sends the message
+//  to the server to be processed.
+function _sendProcessImagesRequest () {
+  _getOptionValues(function(inVal, outVal, wVal) {
+    _formatMsg(inVal, outVal, wVal, function(msg) {
+      _sendMsg(msg);
+    });
+  });
+}
+
 //  Logic that occurs when the PROCESS IMAGES button is pressed.
 function _onProcessImagesButtonPressed() {
-  alert('PROCESS IMAGES button pressed');
+  _sendProcessImagesRequest();
 }
 
 //  Initialization of buttons
@@ -34,24 +140,6 @@ var initButtons = function () {
     var b = document.getElementById(button['id']);
     if (b) { b.addEventListener("click", button['function']); }
   }
-}
-
-function _onInputChange(event) {
-  console.info('Input value changed:', this.value);
-}
-
-var initInput = function() {
-  var e = document.getElementById(ids['inputId']);
-  if (e) { e.addEventListener('change', _onInputChange); }
-}
-
-function _inOutputChange(event) {
-  console.info('Output value changed:', this.value);
-}
-
-var initOutput = function() {
-  var e = document.getElementById(ids['outputId']);
-  if (e) { e.addEventListener('change', _inOutputChange); }
 }
 
 // The variables have been written to `env.json` by the build process.
@@ -112,6 +200,7 @@ function _initialize() {
   initButtons();
   initInput();
   initOutput();
+  initWidth();
 }
 
 document.addEventListener('DOMContentLoaded', function () {

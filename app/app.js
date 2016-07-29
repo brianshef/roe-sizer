@@ -9,6 +9,7 @@ import { ids } from './htmlElements/elementIds';
 import { initButtons } from './buttons/buttons.js';
 import { initInput } from './options/input.js';
 import { initOutput } from './options/output.js';
+import { initWidth } from './options/width.js';
 import env from './env';
 
 var app = remote.app;
@@ -66,6 +67,7 @@ function _initialize() {
   initButtons();
   initInput();
   initOutput();
+  initWidth();
 }
 
 document.addEventListener('DOMContentLoaded', function () {

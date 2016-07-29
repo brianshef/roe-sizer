@@ -120,6 +120,24 @@ function createWindow (name, options) {
 // The variables have been written to `env.json` by the build process.
 var env = jetpack.cwd(__dirname).read('env.json', 'json');
 
+//  Ref: https://github.com/electron/electron/blob/master/docs/api/ipc-main.md
+//  Receive messages from the client (app.js et al)
+const { ipcMain } = require('electron');
+ipcMain.on('asynchronous-message', handleAsyncMessage);
+
+//  Handle messages from the client (app.js et al)
+function handleAsyncMessage(event, msg) {
+  if (event && msg) {
+    console.info('[asynchronous-message]', msg);
+    sendResponse(event, 'Message received');
+  }
+}
+
+// Send responses to the client (app.js et al)
+function sendResponse (event, data) {
+  event.sender.send('asynchronous-reply', data);
+}
+
 var setApplicationMenu = function () {
     var menus = [editMenuTemplate];
     if (env.name !== 'production') {
@@ -137,10 +155,6 @@ electron.app.on('ready', function () {
     });
 
     mainWindow.loadURL('file://' + __dirname + '/app.html');
-
-    // if (env.name !== 'production') {
-    //     mainWindow.openDevTools();
-    // }
 });
 
 electron.app.on('window-all-closed', function () {
