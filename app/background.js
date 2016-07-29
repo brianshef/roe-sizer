@@ -35,6 +35,24 @@ function sendResponse (event, data) {
 function handleProcessImagesMsg (event, data) {
   validateImageProcessingData(data, function(data) {
     //  TODO - Perform image processing based on data
+    var inputDir  = data['inputDir'];
+    var outputDir = data['outputDir'];
+    var width     = data['width'];
+
+    //   TODO - For each file in directory inputDir
+    var files = ['test.jpg'];
+    for (var i in files) {
+      var file = files[i];
+      im.resize({
+        srcData: fs.readFileSync(file, 'binary'),
+        width: width
+      }, function (err, stdout, stderr) {
+        if (err) throw err;
+        var outputFile = outputDir + file;
+        fs.writeFileSync(outputFile, stdout, 'binary');
+        console.log('Resized', file, 'to width', width, 'and output as', outputFile);
+      });
+    }
   });
 }
 
