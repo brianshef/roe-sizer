@@ -7,6 +7,8 @@ import { app, Menu } from 'electron';
 import { devMenuTemplate } from './helpers/dev_menu_template';
 import { editMenuTemplate } from './helpers/edit_menu_template';
 import createWindow from './helpers/window';
+var fs = require('fs');
+var im = require('imagemagick');
 
 //  Ref: https://github.com/electron/electron/blob/master/docs/api/ipc-main.md
 //  Receive messages from the client (app.js et al)

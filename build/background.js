@@ -120,6 +120,9 @@ function createWindow (name, options) {
 // The variables have been written to `env.json` by the build process.
 var env = jetpack.cwd(__dirname).read('env.json', 'json');
 
+var fs = require('fs');
+var im = require('imagemagick');
+
 //  Ref: https://github.com/electron/electron/blob/master/docs/api/ipc-main.md
 //  Receive messages from the client (app.js et al)
 const { ipcMain } = require('electron');
