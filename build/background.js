@@ -129,13 +129,32 @@ ipcMain.on('asynchronous-message', handleAsyncMessage);
 function handleAsyncMessage(event, msg) {
   if (event && msg) {
     console.info('[asynchronous-message]', msg);
-    sendResponse(event, 'Message received');
+    if (msg['type'] == 'PROCESS_IMAGES') {
+      handleProcessImagesMsg(event, msg);
+    } else {
+      sendResponse(event, 'Message received');
+    }
   }
 }
 
 // Send responses to the client (app.js et al)
 function sendResponse (event, data) {
   event.sender.send('asynchronous-reply', data);
+}
+
+function handleProcessImagesMsg (event, data) {
+  validateImageProcessingData(data, function(data) {
+    //  TODO - Perform image processing based on data
+  });
+}
+
+function validateImageProcessingData (data, callback) {
+  var isValid = data && data.outputDir != '' && data.inputDir != '' && data.width > 0;
+  if (isValid && callback) {
+    callback(data);
+  } else {
+    console.warn('Invalid image processing data', data);
+  }
 }
 
 var setApplicationMenu = function () {

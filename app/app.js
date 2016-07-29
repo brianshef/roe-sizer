@@ -49,7 +49,7 @@ function _setContent (id, content, callback) {
     element.innerHTML = content;
     console.info('Set', id, 'content to', content);
   } else {
-    console.warning('Invalid element ID', id);
+    console.warn('Invalid element ID', id);
   }
 
   if (callback) { callback(); }
