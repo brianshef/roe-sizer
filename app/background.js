@@ -45,6 +45,7 @@ function formatPath (p) {
   return p;
 }
 
+//  TODO - Refactor out into own module
 function handleProcessImagesMsg (event, data) {
   validateImageProcessingData(data, function(data) {
     var allowedExtensions = ['.JPG'];
@@ -56,22 +57,19 @@ function handleProcessImagesMsg (event, data) {
       if (err) { throw err; }
       files.forEach(function(file, index) {
         var src = path.join(inputDir, file);
-        var dst = path.join(outputDir, file);
+        var dst = path.join(outputDir, 'resized_' + file);
         var ext = path.extname(file).toUpperCase();
 
         if (allowedExtensions.indexOf(ext) > -1) {
-          console.log('Processing', file, '...');
-          // im.resize({
-          //   srcData: fs.readFileSync(file, 'binary'),
-          //   width: width
-          // }, function (err, stdout, stderr) {
-          //   if (err) throw err;
-          //   var outputFile = outputDir + file;
-          //   fs.writeFileSync(outputFile, stdout, 'binary');
-          //   console.log('Resized', file, 'to width', width, 'and output as', outputFile);
-          // });
-        } else {
-          // console.warning(file, 'has unsupported format', ext);
+          console.log('Processing', src, '...');
+          im.resize({
+            srcData: fs.readFileSync(src, 'binary'),
+            width: width
+          }, function (err, stdout, stderr) {
+            if (err) { throw err; }
+            fs.writeFileSync(dst, stdout, 'binary');
+            console.log('Resized', src, 'to width', width, 'and output as', dst);
+          });
         }
       });
     });
