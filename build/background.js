@@ -121,6 +121,8 @@ function createWindow (name, options) {
 var env = jetpack.cwd(__dirname).read('env.json', 'json');
 
 var fs = require('fs');
+var path = require('path');
+var process = require('process');
 var im = require('imagemagick');
 
 //  Ref: https://github.com/electron/electron/blob/master/docs/api/ipc-main.md
@@ -145,27 +147,42 @@ function sendResponse (event, data) {
   event.sender.send('asynchronous-reply', data);
 }
 
+//  TODO - Needed for when a user uses '~' as a path component
+//  Formats a path correctly for usage with fs.readdir(), etc
+function formatPath (p) {
+  return p;
+}
+
 function handleProcessImagesMsg (event, data) {
   validateImageProcessingData(data, function(data) {
-    //  TODO - Perform image processing based on data
-    var inputDir  = data['inputDir'];
-    var outputDir = data['outputDir'];
+    var allowedExtensions = ['.JPG'];
+    var inputDir  = formatPath(data['inputDir']);
+    var outputDir = formatPath(data['outputDir']);
     var width     = data['width'];
 
-    //   TODO - For each file in directory inputDir
-    var files = ['test.jpg'];
-    for (var i in files) {
-      var file = files[i];
-      im.resize({
-        srcData: fs.readFileSync(file, 'binary'),
-        width: width
-      }, function (err, stdout, stderr) {
-        if (err) throw err;
-        var outputFile = outputDir + file;
-        fs.writeFileSync(outputFile, stdout, 'binary');
-        console.log('Resized', file, 'to width', width, 'and output as', outputFile);
+    fs.readdir(inputDir, function(err, files) {
+      if (err) { throw err; }
+      files.forEach(function(file, index) {
+        var src = path.join(inputDir, file);
+        var dst = path.join(outputDir, file);
+        var ext = path.extname(file).toUpperCase();
+
+        if (allowedExtensions.indexOf(ext) > -1) {
+          console.log('Processing', file, '...');
+          // im.resize({
+          //   srcData: fs.readFileSync(file, 'binary'),
+          //   width: width
+          // }, function (err, stdout, stderr) {
+          //   if (err) throw err;
+          //   var outputFile = outputDir + file;
+          //   fs.writeFileSync(outputFile, stdout, 'binary');
+          //   console.log('Resized', file, 'to width', width, 'and output as', outputFile);
+          // });
+        } else {
+          // console.warning(file, 'has unsupported format', ext);
+        }
       });
-    }
+    });
   });
 }
 
