@@ -66,7 +66,8 @@ function _resizeImage(src, dst, width, callback) {
   em.resize({
      src: src,
      dst: dst,
-     width: width
+     width: width,
+     quality: 100
   }).then (
   function(image) {
      console.log('Resized', src, 'to width', width, 'and output as', dst);
