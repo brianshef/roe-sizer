@@ -119,8 +119,7 @@ function createWindow (name, options) {
 
 var fs    = require('fs');
 var path  = require('path');
-var im    = require('imagemagick');
-
+var em    = require('easyimage');
 
 var processImages = function(data, callback) {
   _validateImageProcessingData(data, function(data) {
@@ -183,13 +182,16 @@ function _performProcessing(queue, callback) {
 
 //  Resizes a src image and outputs to dst
 function _resizeImage(src, dst, width, callback) {
-  im.resize({
-    srcPath: src,
-    dstPath: dst,
-    width:   width
-  }, function(err, stdout, stderr) {
-    if (err) { throw err };
-    console.log('Resized', src, 'to width', width, 'and output as', dst);
+  em.resize({
+     src: src,
+     dst: dst,
+     width: width
+  }).then (
+  function(image) {
+     console.log('Resized', src, 'to width', width, 'and output as', dst);
+  },
+  function (err) {
+    console.error(err);
   });
 
   if (callback) { callback(); }
