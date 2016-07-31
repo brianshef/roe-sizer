@@ -10,6 +10,7 @@ import { initButtons } from './buttons/buttons.js';
 import { initInput } from './options/input.js';
 import { initOutput } from './options/output.js';
 import { initWidth } from './options/width.js';
+import { updateStatus } from './logger/console';
 import env from './env';
 
 var app = remote.app;
@@ -39,25 +40,6 @@ function _setVisible (id, visible, callback) {
   }
 
   if (callback) { callback(); }
-}
-
-//  Sets the inner HTML of the element with the specified ID to the specified
-//  content, if the element exists.
-function _setContent (id, content, callback) {
-  var element = document.getElementById(id);
-  if (element && element.innerHTML) {
-    element.innerHTML = content;
-    console.info('Set', id, 'content to', content);
-  } else {
-    console.warn('Invalid element ID', id);
-  }
-
-  if (callback) { callback(); }
-}
-
-//  Updates the status message to the specified message content.
-function updateStatus (msg) {
-  _setContent(ids['statusId'], msg);
 }
 
 //  Initialization logic

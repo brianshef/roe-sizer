@@ -2,7 +2,7 @@
   "name": "roe-sizer-dev",
   "productName": "Roe-Sizer Dev",
   "description": "Handy image batch resizer, designed with LuLaRoe consultants in mind.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Brian Shef <brianshef@gmail.com>",
   "copyright": "© 2016, Brian Shef",
   "main": "background.js",
