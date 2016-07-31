@@ -3,14 +3,15 @@
 // It doesn't have any windows which you can see on screen, but we can open
 // window from here.
 
-import { app, Menu } from 'electron';
-import { devMenuTemplate } from './helpers/dev_menu_template';
+import { app, Menu }        from 'electron';
+import { devMenuTemplate }  from './helpers/dev_menu_template';
 import { editMenuTemplate } from './helpers/edit_menu_template';
-import createWindow from './helpers/window';
-var fs = require('fs');
-var path = require('path');
-var process = require('process');
-var im = require('imagemagick');
+import createWindow         from './helpers/window';
+import { processImages }    from './imageProcess/processor';
+
+// Special module holding environment variables which you declared
+// in config/env_xxx.json file.
+import env from './env';
 
 //  Ref: https://github.com/electron/electron/blob/master/docs/api/ipc-main.md
 //  Receive messages from the client (app.js et al)
@@ -34,60 +35,12 @@ function sendResponse (event, data) {
   event.sender.send('asynchronous-reply', data);
 }
 
-//  Get the user's home directory, platform-agnostic
-function getUserHome() {
-  return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
-}
-
-//  TODO - Needed for when a user uses '~' as a path component
-//  Formats a path correctly for usage with fs.readdir(), etc
-function formatPath (p) {
-  return p;
-}
-
-//  TODO - Refactor out into own module
+//  Logic that occurs for messages regarding image processing
 function handleProcessImagesMsg (event, data) {
-  validateImageProcessingData(data, function(data) {
-    var allowedExtensions = ['.JPG'];
-    var inputDir  = formatPath(data['inputDir']);
-    var outputDir = formatPath(data['outputDir']);
-    var width     = data['width'];
-
-    fs.readdir(inputDir, function(err, files) {
-      if (err) { throw err; }
-      files.forEach(function(file, index) {
-        var src = path.join(inputDir, file);
-        var dst = path.join(outputDir, 'resized_' + file);
-        var ext = path.extname(file).toUpperCase();
-
-        if (allowedExtensions.indexOf(ext) > -1) {
-          console.log('Processing', src, '...');
-          im.resize({
-            srcData: fs.readFileSync(src, 'binary'),
-            width: width
-          }, function (err, stdout, stderr) {
-            if (err) { throw err; }
-            fs.writeFileSync(dst, stdout, 'binary');
-            console.log('Resized', src, 'to width', width, 'and output as', dst);
-          });
-        }
-      });
-    });
+  processImages(data, function(response) {
+    sendResponse(event, response);
   });
 }
-
-function validateImageProcessingData (data, callback) {
-  var isValid = data && data.outputDir != '' && data.inputDir != '' && data.width > 0;
-  if (isValid && callback) {
-    callback(data);
-  } else {
-    console.warn('Invalid image processing data', data);
-  }
-}
-
-// Special module holding environment variables which you declared
-// in config/env_xxx.json file.
-import env from './env';
 
 var mainWindow;
 

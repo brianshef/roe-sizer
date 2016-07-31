@@ -117,13 +117,81 @@ function createWindow (name, options) {
     return win;
 }
 
+var fs    = require('fs');
+var path  = require('path');
+var im    = require('imagemagick');
+
+//  Enqueue only valid images and then process the queue with a callback
+function _enqueueValidImages(files, queue, inputDir, outputDir, width, callback) {
+  var allowedExtensions = ['.JPG'];
+  files.forEach(function(file, index) {
+    var imgSrc = path.join(inputDir, file);
+    var imgDst = path.join(outputDir, 'resized_' + file);
+    var ext    = path.extname(file).toUpperCase();
+
+    if (allowedExtensions.indexOf(ext) > -1) {
+      queue.push({
+        "src": imgSrc,
+        "dst": imgDst,
+        "width": width
+      });
+    }
+  });
+
+  if (callback) { callback(queue); }
+}
+
+//  Perform the image processing on the queue of image data
+function _performProcessing(queue, callback) {
+  console.log('[DEBUG processImages()]', queue);
+  queue.forEach(function(img, index) {
+    var src   = img['src'];
+    var dst   = img['dst'];
+    var width = img['width'];
+
+    console.log('(', index + 1, 'of', queue.length, ')', 'Processing', src,  '...');
+
+    im.resize({
+      srcPath: src,
+      dstPath: dst,
+      width:   width
+    }, function(err, stdout, stderr) {
+      if (err) { throw err };
+      console.log('Resized', src, 'to width', width, 'and output as', dst);
+      if (callback) { callback('DONE'); }
+    });
+  });
+}
+
+function _validateImageProcessingData (data, callback) {
+  var isValid = data && data.outputDir != '' && data.inputDir != '' && data.width > 0;
+  if (isValid && callback) {
+    callback(data);
+  } else {
+    console.warn('Invalid image processing data', data);
+  }
+}
+
+var processImages = function(data, callback) {
+  _validateImageProcessingData(data, function(data) {
+    var inputDir  = data['inputDir'];
+    var outputDir = data['outputDir'];
+    var width     = data['width'];
+    var queue     = [];
+
+    fs.readdir(inputDir, function(err, files) {
+      if (err) { throw err; }
+      _enqueueValidImages(files, queue, inputDir, outputDir, width, function(queue) {
+        _performProcessing(queue, function(response) {
+          if (callback) { callback(response); }
+        });
+      });
+    });
+  });
+}
+
 // The variables have been written to `env.json` by the build process.
 var env = jetpack.cwd(__dirname).read('env.json', 'json');
-
-var fs = require('fs');
-var path = require('path');
-var process = require('process');
-var im = require('imagemagick');
 
 //  Ref: https://github.com/electron/electron/blob/master/docs/api/ipc-main.md
 //  Receive messages from the client (app.js et al)
@@ -147,50 +215,11 @@ function sendResponse (event, data) {
   event.sender.send('asynchronous-reply', data);
 }
 
-//  TODO - Needed for when a user uses '~' as a path component
-//  Formats a path correctly for usage with fs.readdir(), etc
-function formatPath (p) {
-  return p;
-}
-
-//  TODO - Refactor out into own module
+//  Logic that occurs for messages regarding image processing
 function handleProcessImagesMsg (event, data) {
-  validateImageProcessingData(data, function(data) {
-    var allowedExtensions = ['.JPG'];
-    var inputDir  = formatPath(data['inputDir']);
-    var outputDir = formatPath(data['outputDir']);
-    var width     = data['width'];
-
-    fs.readdir(inputDir, function(err, files) {
-      if (err) { throw err; }
-      files.forEach(function(file, index) {
-        var src = path.join(inputDir, file);
-        var dst = path.join(outputDir, 'resized_' + file);
-        var ext = path.extname(file).toUpperCase();
-
-        if (allowedExtensions.indexOf(ext) > -1) {
-          console.log('Processing', src, '...');
-          im.resize({
-            srcData: fs.readFileSync(src, 'binary'),
-            width: width
-          }, function (err, stdout, stderr) {
-            if (err) { throw err; }
-            fs.writeFileSync(dst, stdout, 'binary');
-            console.log('Resized', src, 'to width', width, 'and output as', dst);
-          });
-        }
-      });
-    });
+  processImages(data, function(response) {
+    sendResponse(event, response);
   });
-}
-
-function validateImageProcessingData (data, callback) {
-  var isValid = data && data.outputDir != '' && data.inputDir != '' && data.width > 0;
-  if (isValid && callback) {
-    callback(data);
-  } else {
-    console.warn('Invalid image processing data', data);
-  }
 }
 
 var setApplicationMenu = function () {
