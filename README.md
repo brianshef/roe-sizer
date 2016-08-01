@@ -14,8 +14,12 @@ Additional installation instrutions TBD
 1. Press the *PROCESS IMAGES* button once the above options have been set.
 
 ### Developers (Linux / MacOS)
+
 #### Install modules
-`cd roe-sizer && sudo npm install`
-`popd app && sudo npm install && pushd`
+```
+cd roe-sizer && sudo npm install
+popd app && sudo npm install && pushd
+```
+
 #### Run (in development mode)
 `cd roe-sizer && npm start`
