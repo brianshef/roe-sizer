@@ -5,7 +5,7 @@ Handy image batch resizer, designed with LuLaRoe consultants in mind.
 First, Roe-Sizer requires [ImageMagick](http://imagemagick.org/script/binary-releases.php)
 to be installed on your system.
 
-Additional installation instrutions TBD
+Additional installation instructions TBD
 
 ## Usage
 1. Paste in *input* directory. This should be a folder containing the images that need to be processed.
@@ -23,3 +23,9 @@ popd app && sudo npm install && pushd
 
 #### Run (in development mode)
 `cd roe-sizer && npm start`
+
+#### Technologies
+- [NodeJS](https://nodejs.org/en/)
+- [Electron](https://github.com/szwacz/electron-boilerplate)
+- [Bootstrap](http://getbootstrap.com/)
+- [ImageMagick](http://imagemagick.org/script/binary-releases.php)
