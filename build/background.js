@@ -198,37 +198,37 @@ function _resizeImage(src, dst, width, callback) {
   if (callback) { callback(); }
 }
 
-// The variables have been written to `env.json` by the build process.
-var env = jetpack.cwd(__dirname).read('env.json', 'json');
-
 //  Ref: https://github.com/electron/electron/blob/master/docs/api/ipc-main.md
 //  Receive messages from the client (app.js et al)
 const { ipcMain } = require('electron');
-ipcMain.on('asynchronous-message', handleAsyncMessage);
+ipcMain.on('asynchronous-message', _handleAsyncMessage);
 
 //  Handle messages from the client (app.js et al)
-function handleAsyncMessage(event, msg) {
+function _handleAsyncMessage(event, msg) {
   if (event && msg) {
     console.info('[asynchronous-message]', msg);
     if (msg['type'] == 'PROCESS_IMAGES') {
-      handleProcessImagesMsg(event, msg);
+      _handleProcessImagesMsg(event, msg);
     } else {
-      sendResponse(event, 'Message received');
+      _sendResponse(event, 'Message received');
     }
   }
 }
 
 // Send responses to the client (app.js et al)
-function sendResponse (event, data) {
+function _sendResponse (event, data) {
   event.sender.send('asynchronous-reply', data);
 }
 
 //  Logic that occurs for messages regarding image processing
-function handleProcessImagesMsg (event, data) {
+function _handleProcessImagesMsg (event, data) {
   processImages(data, function(response) {
-    sendResponse(event, response);
+    _sendResponse(event, response);
   });
 }
+
+// The variables have been written to `env.json` by the build process.
+var env = jetpack.cwd(__dirname).read('env.json', 'json');
 
 var setApplicationMenu = function () {
     var menus = [editMenuTemplate];

@@ -42,6 +42,8 @@ function _setVisible (id, visible, callback) {
   if (callback) { callback(); }
 }
 
+
+
 //  Initialization logic
 function _initialize() {
   updateStatus(DEBUG_MODE ? debugString : 'Welcome to ' + productName + ' ' + pkgVersion + ' by ' + pkgAuthor);

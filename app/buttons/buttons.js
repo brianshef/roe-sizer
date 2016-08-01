@@ -1,21 +1,10 @@
-import { ids }            from '../htmlElements/elementIds';
-import { getInputValue }  from '../options/input';
-import { getOutputValue } from '../options/output';
-import { getWidthValue }  from '../options/width';
+import { ids }              from '../htmlElements/elementIds';
+import { getInputValue }    from '../options/input';
+import { getOutputValue }   from '../options/output';
+import { getWidthValue }    from '../options/width';
+import { updateStatus }     from '../logger/console';
+import { sendMsgToServer }  from '../messaging/client'
 
-//  Receive messages from server (background.js)
-const { ipcRenderer } = require('electron');
-ipcRenderer.on('asynchronous-reply', _handleAsyncMessage);
-
-//  Handle messages from server (background.js)
-function _handleAsyncMessage (event, msg) {
-  console.info('[asynchronous-message]', msg);
-}
-
-//  Send messages to server (background.js)
-function _sendMsg (data) {
-  ipcRenderer.send('asynchronous-message', data);
-}
 
 //  Get the values of the various options
 function _getOptionValues (callback) {
@@ -41,7 +30,7 @@ function _formatMsg (inputDir, outputDir, width, callback) {
 function _sendProcessImagesRequest () {
   _getOptionValues(function(inVal, outVal, wVal) {
     _formatMsg(inVal, outVal, wVal, function(msg) {
-      _sendMsg(msg);
+      sendMsgToServer(msg);
     });
   });
 }

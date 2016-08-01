@@ -7,40 +7,13 @@ import { app, Menu }        from 'electron';
 import { devMenuTemplate }  from './helpers/dev_menu_template';
 import { editMenuTemplate } from './helpers/edit_menu_template';
 import createWindow         from './helpers/window';
-import { processImages }    from './imageProcess/processor';
+
+//  Enable client/server communications via Electron's ipc
+import './messaging/server';
 
 // Special module holding environment variables which you declared
 // in config/env_xxx.json file.
 import env from './env';
-
-//  Ref: https://github.com/electron/electron/blob/master/docs/api/ipc-main.md
-//  Receive messages from the client (app.js et al)
-const { ipcMain } = require('electron');
-ipcMain.on('asynchronous-message', handleAsyncMessage);
-
-//  Handle messages from the client (app.js et al)
-function handleAsyncMessage(event, msg) {
-  if (event && msg) {
-    console.info('[asynchronous-message]', msg);
-    if (msg['type'] == 'PROCESS_IMAGES') {
-      handleProcessImagesMsg(event, msg);
-    } else {
-      sendResponse(event, 'Message received');
-    }
-  }
-}
-
-// Send responses to the client (app.js et al)
-function sendResponse (event, data) {
-  event.sender.send('asynchronous-reply', data);
-}
-
-//  Logic that occurs for messages regarding image processing
-function handleProcessImagesMsg (event, data) {
-  processImages(data, function(response) {
-    sendResponse(event, response);
-  });
-}
 
 var mainWindow;
 

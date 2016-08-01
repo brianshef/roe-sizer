@@ -78,17 +78,44 @@ var initWidth = function() {
   });
 }
 
+//  Sets the inner HTML of the element with the specified ID to the specified
+//  content, if the element exists.
+var setContent = function (id, content, callback) {
+  var element = document.getElementById(id);
+  if (element && element.innerHTML) {
+    element.innerHTML = content;
+    console.info('Set', id, 'content to', content);
+  } else {
+    console.warn('Invalid element ID', id);
+  }
+
+  if (callback) { callback(); }
+}
+
+//  Updates the status message to the specified message content.
+var updateStatus = function (msg) {
+  setContent(ids['statusId'], msg);
+}
+
 //  Receive messages from server (background.js)
 const { ipcRenderer } = require('electron');
-ipcRenderer.on('asynchronous-reply', _handleAsyncMessage);
+ipcRenderer.on('asynchronous-reply', _handleAsyncReply);
+ipcRenderer.on('server-message', _handleServerMessage);
 
-//  Handle messages from server (background.js)
-function _handleAsyncMessage (event, msg) {
-  console.info('[asynchronous-message]', msg);
+//  Logic that occurs when message replies from the server are received.
+function _handleAsyncReply (event, msg) {
+  console.info('[asynchronous-reply]', msg);
+  updateStatus(msg);
+}
+
+//  Logic that occurs when messages from the server are received.
+function _handleServerMessage (event, msg) {
+  console.log('[server-message]', msg);
+  alert(msg);
 }
 
 //  Send messages to server (background.js)
-function _sendMsg (data) {
+var sendMsgToServer = function (data) {
   ipcRenderer.send('asynchronous-message', data);
 }
 
@@ -116,7 +143,7 @@ function _formatMsg (inputDir, outputDir, width, callback) {
 function _sendProcessImagesRequest () {
   _getOptionValues(function(inVal, outVal, wVal) {
     _formatMsg(inVal, outVal, wVal, function(msg) {
-      _sendMsg(msg);
+      sendMsgToServer(msg);
     });
   });
 }
@@ -140,25 +167,6 @@ var initButtons = function () {
     var b = document.getElementById(button['id']);
     if (b) { b.addEventListener("click", button['function']); }
   }
-}
-
-//  Sets the inner HTML of the element with the specified ID to the specified
-//  content, if the element exists.
-var setContent = function (id, content, callback) {
-  var element = document.getElementById(id);
-  if (element && element.innerHTML) {
-    element.innerHTML = content;
-    console.info('Set', id, 'content to', content);
-  } else {
-    console.warn('Invalid element ID', id);
-  }
-
-  if (callback) { callback(); }
-}
-
-//  Updates the status message to the specified message content.
-var updateStatus = function (msg) {
-  setContent(ids['statusId'], msg);
 }
 
 // The variables have been written to `env.json` by the build process.
@@ -192,6 +200,8 @@ function _setVisible (id, visible, callback) {
 
   if (callback) { callback(); }
 }
+
+
 
 //  Initialization logic
 function _initialize() {
