@@ -78,15 +78,13 @@ var initWidth = function() {
   });
 }
 
-//  Sets the inner HTML of the element with the specified ID to the specified
-//  content, if the element exists.
-var setContent = function (id, content, callback) {
+//  Appends a new line to the status console
+var _appendLine = function (id, content, callback) {
   var element = document.getElementById(id);
-  if (element && element.innerHTML) {
-    element.innerHTML = content;
-    console.info('Set', id, 'content to', content);
-  } else {
-    console.warn('Invalid element ID', id);
+  if (element) {
+    var lines = element.value.split("\n");
+    lines.push(content);
+    element.value = lines.join("\n");
   }
 
   if (callback) { callback(); }
@@ -94,7 +92,7 @@ var setContent = function (id, content, callback) {
 
 //  Updates the status message to the specified message content.
 var updateStatus = function (msg) {
-  setContent(ids['statusId'], msg);
+  _appendLine(ids['statusId'], msg);
 }
 
 //  Receive messages from server (background.js)
@@ -183,7 +181,7 @@ var pkgVersion  = pkg.version;
 var pkgAuthor   = pkg.author;
 var platform    = os.platform().toUpperCase();
 var environment = env.name.toUpperCase();
-var debugString = pkgName + ' ' + pkgVersion + ' by ' + pkgAuthor + ' @ ' + platform + ' ' + environment;
+var debugString = pkgName + ' ' + pkgVersion + ' by ' + pkgAuthor + ' on ' + platform + ' ' + environment;
 var DEBUG_MODE  = environment == 'DEVELOPMENT';
 if (DEBUG_MODE) { console.log(debugString); }
 

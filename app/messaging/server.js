@@ -35,7 +35,5 @@ export var sendMessage = function (browserWindow, msg) {
 
 //  Logic that occurs for messages regarding image processing
 function _handleProcessImagesMsg (event, data) {
-  processImages(data, function(response) {
-    _sendResponse(event, response);
-  });
+  processImages(data, event);
 }

@@ -121,7 +121,7 @@ var fs    = require('fs');
 var path  = require('path');
 var em    = require('easyimage');
 
-var processImages = function(data, callback) {
+var processImages = function(data, event, callback) {
   _validateImageProcessingData(data, function(data) {
     var inputDir  = data['inputDir'];
     var outputDir = data['outputDir'];
@@ -130,7 +130,7 @@ var processImages = function(data, callback) {
 
     var files = fs.readdirSync(inputDir);
     _enqueueValidImages(files, queue, inputDir, outputDir, width, function(queue) {
-      _performProcessing(queue, function(response) {
+      _performProcessing(queue, event, function(response) {
         if (callback) { callback(response); }
       });
     });
@@ -167,21 +167,25 @@ function _enqueueValidImages(files, queue, inputDir, outputDir, width, callback)
 }
 
 //  Perform the image processing on the queue of image data
-function _performProcessing(queue, callback) {
+function _performProcessing(queue, event, callback) {
   queue.forEach(function(img, index) {
     var src   = img['src'];
     var dst   = img['dst'];
     var width = img['width'];
 
-    console.log('(', index + 1, 'of', queue.length, ')', 'Processing', src,  '...');
     _resizeImage(src, dst, width);
+
+    var n = index + 1;
+    var statusMsg = '( ' + n + ' of ' + queue.length + ' ) Resized ' + src + ' to width ' + width + ' and output to ' + dst;
+    event.sender.send('asynchronous-reply', statusMsg);
   });
 
-  if (callback) { callback('DONE'); }
+  if (callback) { callback(queue); }
 }
 
 //  Resizes a src image and outputs to dst
 function _resizeImage(src, dst, width, callback) {
+  var statusMsg = 'Resized ' + src + ' to width ' + width + ' and output to ' + dst;
   em.resize({
      src: src,
      dst: dst,
@@ -189,13 +193,15 @@ function _resizeImage(src, dst, width, callback) {
      quality: 100
   }).then (
   function(image) {
-     console.log('Resized', src, 'to width', width, 'and output as', dst);
+    if (callback) {
+      callback(statusMsg);
+    } else {
+      console.log(statusMsg);
+    }
   },
   function (err) {
     console.error(err);
   });
-
-  if (callback) { callback(); }
 }
 
 //  Ref: https://github.com/electron/electron/blob/master/docs/api/ipc-main.md
@@ -222,9 +228,7 @@ function _sendResponse (event, data) {
 
 //  Logic that occurs for messages regarding image processing
 function _handleProcessImagesMsg (event, data) {
-  processImages(data, function(response) {
-    _sendResponse(event, response);
-  });
+  processImages(data, event);
 }
 
 // The variables have been written to `env.json` by the build process.

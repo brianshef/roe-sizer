@@ -21,15 +21,16 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body style="padding-top: 70px">
+<body>
+<!-- <body style="padding-top: 70px"> -->
 
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <!-- <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
           <a class="navbar-brand" href="https://github.com/brianshef/roe-sizer">Roe-Sizer</a>
         </div>
       </div>
-    </nav>
+    </nav> -->
 
     <div class="container-fluid">
 
@@ -89,23 +90,21 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-12">
-          <button id="button" type="button" class="btn btn-primary btn-lg btn-block" style="height:100px"><h1>PROCESS IMAGES</h1></button>
-        </div>
-      </div>
-
       <div class="row" style="padding-top: 2em">
         <div class="col-md-12">
-          <div class="progress">
+          <div class="progress" style="display: none">
             <div id="progress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
             </div>
           </div>
         </div>
       </div>
+
       <div class="row">
-        <div class="col-md-12">
-          <div id="status" class="well well-sm">Status messages here ... </div>
+        <div class="col-md-3">
+          <button id="button" type="button" class="btn btn-primary btn-lg btn-block" style="height: 10em"><strong>PROCESS IMAGES</strong></button>
+        </div>
+        <div class="col-md-9">
+          <textarea readonly id="status" class="form-control" rows="10" style="background: white; height: 13em"> </textarea>
         </div>
       </div>
     </div>

@@ -24,7 +24,7 @@ var pkgVersion  = pkg.version;
 var pkgAuthor   = pkg.author;
 var platform    = os.platform().toUpperCase();
 var environment = env.name.toUpperCase();
-var debugString = pkgName + ' ' + pkgVersion + ' by ' + pkgAuthor + ' @ ' + platform + ' ' + environment;
+var debugString = pkgName + ' ' + pkgVersion + ' by ' + pkgAuthor + ' on ' + platform + ' ' + environment;
 var DEBUG_MODE  = environment == 'DEVELOPMENT';
 if (DEBUG_MODE) { console.log(debugString); }
 
