@@ -1,4 +1,4 @@
-# roe-sizer
+# ![](/resources/icon_sm.png "Roe-Sizer") Roe-Sizer
 Handy image batch resizer, designed with LuLaRoe consultants in mind.
 
 ## Installation
@@ -12,9 +12,6 @@ Additional installation instrutions TBD
 1. Paste in the *output* directory. This will be the location where all the processed images will be placed when they are ready.
 1. Select the *desired width*. The images will be sized down to that width; the image aspect ratio will be preserved.
 1. Press the *PROCESS IMAGES* button once the above options have been set.
-
-### LuLaRoe Consultants
-Instructions TBD
 
 ### Developers (Linux / MacOS)
 #### Install modules
