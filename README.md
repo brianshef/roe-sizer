@@ -23,10 +23,12 @@ application file.
 
 ### Linux
 #### Ubuntu / Debian
-TBD
-
-#### RHEL / CentOS / Fedora
-TBD
+1. Use your system's software manager/installer
+(or simply double-click, in most desktop distros) to install the versioned
+`roe-sizer-vx.y.z-linux-x64.deb` Debian package.
+2. If you're using Linux, you know how to run the software that you install.
+There are simply too many distros and desktop environments for me to list the
+myriad ways to run an application. Look for the Roe-Sizer icon!
 
 ## Usage
 1. Paste in *input* directory. This should be a folder containing the images that need to be processed.
