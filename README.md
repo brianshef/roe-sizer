@@ -50,3 +50,4 @@ popd app && sudo npm install && pushd
 - [Electron](https://github.com/szwacz/electron-boilerplate)
 - [Bootstrap](http://getbootstrap.com/)
 - [ImageMagick](http://imagemagick.org/script/binary-releases.php)
+- [NSIS](http://nsis.sourceforge.net/Main_Page)
