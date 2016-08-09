@@ -21,8 +21,7 @@ the Windows installer.
 3. To run Roe-Sizer, simply double-click the `Roe-Sizer` shortcut or executable
 application file.
 
-### Linux
-#### Ubuntu / Debian
+### Linux ( Ubuntu / Debian )
 1. Use your system's software manager/installer
 (or simply double-click, in most desktop distros) to install the versioned
 `roe-sizer-vx.y.z-linux-x64.deb` Debian package.
