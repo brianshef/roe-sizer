@@ -1,4 +1,7 @@
 {
+  "repository": "https://github.com/brianshef/roe-sizer.git",
+  "license": "GPL-3.0",
+  "readme": "README.md",
   "devDependencies": {
     "asar": "^0.11.0",
     "chai": "^3.5.0",

@@ -4,9 +4,10 @@ Handy image batch resizer, designed with LuLaRoe consultants in mind.
 ## Installation
 First, Roe-Sizer requires [ImageMagick](http://imagemagick.org/script/binary-releases.php)
 to be installed on your system.
+Windows users might need to install all available options with ImageMagick.
 
 ### OSX / MacOS
-1. Double-click the versioned `roe-sizer-vx.y.z-darwin-x64.dmg` file to mount
+1. Double-click the versioned `roe-sizer_*.dmg` file to mount
 the disk.
 2. Once mounted, the Roe-Sizer MacOS installation window will automatically open
 and prompt you to drag the application icon into your Applications directory
@@ -15,7 +16,7 @@ to install Roe-Sizer.
 the Applications directory, or whatever dock you feel like adding it to!
 
 ### Windows
-1. Double click the versioned `roe-sizer-vx.y.z-win32-x64.exe` file to execute
+1. Double click the versioned `roe-sizer_*.exe` file to execute
 the Windows installer.
 2. The application will be installed by default to `C:\Program Files (x86)\Roe-Sizer`
 3. To run Roe-Sizer, simply double-click the `Roe-Sizer` shortcut or executable
@@ -24,7 +25,7 @@ application file.
 ### Linux ( Ubuntu / Debian )
 1. Use your system's software manager/installer
 (or simply double-click, in most desktop distros) to install the versioned
-`roe-sizer-vx.y.z-linux-x64.deb` Debian package.
+`roe-sizer_*.deb` Debian package.
 2. If you're using Linux, you know how to run the software that you install.
 There are simply too many distros and desktop environments for me to list the
 myriad ways to run an application. Look for the Roe-Sizer icon!
